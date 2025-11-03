@@ -1,12 +1,8 @@
 {
-    "name": "SmolTags.Editor",
-    "rootNamespace": "SmolTags.Editor",
-    "references": [
-        "SmolTags"
-    ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "name": "SmolTags",
+    "rootNamespace": "SmolTags",
+    "references": [],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

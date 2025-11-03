@@ -1,6 +1,6 @@
 {
     "name": "com.isartdigital.smoltags",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "displayName": "SmolTags",
     "description": "Small little attributes that make life easier!",
     "unity": "6000.0",

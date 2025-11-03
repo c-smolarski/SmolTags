@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace SmolTags.Drawers
+namespace SmolTags.Editor.Drawers
 {
     [CustomPropertyDrawer(typeof(ShowIfAttribute))]
-    internal class ShowIfDrawer : PropertyDrawer
+    public class ShowIfDrawer : PropertyDrawer
     {
         private ShowIfAttribute _showAttribute;
         private SerializedProperty _showProperty;
