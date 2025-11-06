@@ -86,6 +86,9 @@ namespace SmolTags.Editor.Drawers
 
         private bool CanShow()
         {
+            if (_showProperty == null)
+                throw new Exception("Invalid property");
+
             if (_showProperty.type == nameof(Enum))
                 return _showProperty.enumValueIndex.Equals((int)_showAttribute.ShowValue);
             return _showProperty.boxedValue.Equals(_showAttribute.ShowValue);
