@@ -9,6 +9,10 @@ namespace SmolTags.Editor.Drawers
     [CustomPropertyDrawer(typeof(ShowIfAttribute))]
     public class ShowIfDrawer : PropertyDrawer
     {
+        private const char PROPERTY_PATH_SPLITTER = '.';
+        private const string ARRAY_PATH = "Array";
+        private const string ARRAY_DATA_PATH = "data[";
+
         private ShowIfAttribute _showAttribute;
         private SerializedProperty _showProperty;
         private bool _prevCanShow, _canShow;
@@ -16,12 +20,34 @@ namespace SmolTags.Editor.Drawers
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             _showAttribute = (ShowIfAttribute)attribute;
-            _showProperty = property.serializedObject.FindProperty(_showAttribute.PropertyName);
+            _showProperty = GetProperty(property);
+
             _canShow = CanShow();
 
             if (!_canShow && _showAttribute.hide)
                 return 0f;
             return EditorGUI.GetPropertyHeight(property, label, true);
+        }
+
+        private SerializedProperty GetProperty(SerializedProperty property)
+        {
+            SerializedProperty newProp = property.serializedObject.FindProperty(_showAttribute.PropertyName);
+            if (newProp != null)
+                return newProp;
+
+            string[] paths = property.propertyPath.Split(PROPERTY_PATH_SPLITTER);
+            newProp = property.serializedObject.FindProperty(paths[0]);
+            for (int i = 1; i < paths.Length - 1; i++)
+            {
+                if (paths[i] == ARRAY_PATH)
+                {
+                    newProp = newProp.GetArrayElementAtIndex(int.Parse(paths[i + 1][ARRAY_DATA_PATH.Length..^1]));
+                    i += 1;
+                }
+                else
+                    newProp = newProp.FindPropertyRelative(paths[i]);
+            }
+            return newProp.FindPropertyRelative(_showAttribute.PropertyName);
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
