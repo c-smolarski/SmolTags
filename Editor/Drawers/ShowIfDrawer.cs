@@ -63,12 +63,11 @@ namespace SmolTags.Editor.Drawers
                     GUI.enabled = true;
                 }
 
-                if (_prevCanShow == true && _showAttribute.resetIfDisabled)
+                if (_prevCanShow && _showAttribute.resetIfDisabled)
                     ResetProperty(property, _showAttribute.resetValue);
             }
 
-            if (_prevCanShow != _canShow)
-                _prevCanShow = _canShow;
+            _prevCanShow = _canShow;
         }
 
         private void ResetProperty(SerializedProperty property, object resetValue)
@@ -95,7 +94,7 @@ namespace SmolTags.Editor.Drawers
                 return;
             }
 
-            if (!property.boxedValue.Equals(resetValue))
+            if (!(property.boxedValue?.Equals(resetValue) ?? false))
             {
                 defaultValue = GetDefaultValue(property.boxedValue);
                 property.boxedValue = resetValue != default ? resetValue : defaultValue;
@@ -104,6 +103,9 @@ namespace SmolTags.Editor.Drawers
 
         private object GetDefaultValue(object obj)
         {
+            if (obj is null)
+                return null;
+            
             Type t = obj.GetType();
             if (t.IsValueType || t.IsGenericType)
                 return Activator.CreateInstance(t);
@@ -114,10 +116,10 @@ namespace SmolTags.Editor.Drawers
         {
             if (_showProperty == null)
                 throw new Exception("Invalid property");
-
+            
             if (_showProperty.type == nameof(Enum))
                 return _showProperty.enumValueIndex.Equals((int)_showAttribute.ShowValue);
-            return _showProperty.boxedValue.Equals(_showAttribute.ShowValue);
+            return _showProperty.boxedValue?.Equals(_showAttribute.ShowValue) ?? _showAttribute.ShowValue is null;
         }
     }
 }
